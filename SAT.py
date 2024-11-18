@@ -17,13 +17,22 @@ def FindSat(input) :
         
     problem = LpProblem('SAT')
 
-    # define or constraints (split on semicolon)
-    separatedOrs = input.split(';')
-    for item in separatedOrs:
-        # problem += output >= parseAnyNot(item1)
-        # problem += output >= parseAnyNot(item2)
-        # problem += output <= parseAnyNot(item1) + parseAnyNot(item2)
+    # define or constraints (split on semicolon for OR)
+    orVariables = []
+    for item in input:
+        newOr = LpVariable(item)
+        separatedLiterals = item.split(';')
+        orComponent = []
+        for l in separatedLiterals:
+            if('-' in l): # each of these branches: add to 'orComponent' list for use in the last constraint
+                pass
+                # find variable[l]
+                # problem += newOr >= not variable[l]
+            else:
+                pass
+                # problem += newOr >= variable[l]
 
+        # problem += newOr <= Sum of variable in item
 
 
 
