@@ -73,4 +73,26 @@ def test_Longer_function_is_false():
     answer = threeOnes.GetSATResult({'a':0, 'b': 1, 'c':1, 'd':0})
     assert answer == False
 
+def test_two_inputs():
+    threeOnes = BooleanLogic(['a;b', '-a;-b'])
+    answer = threeOnes.GetSATResult({'a':0, 'b': 0})
+    assert answer == False
+    answer = threeOnes.GetSATResult({'a':0, 'b': 1})
+    assert answer == True
+    answer = threeOnes.GetSATResult({'a':1, 'b': 0})
+    assert answer == True
+    answer = threeOnes.GetSATResult({'a':1, 'b': 1})
+    assert answer == False
+    
+def test_Always_false():
+    threeOnes = BooleanLogic(['a','b', '-a','-b'])
+    answer = threeOnes.GetSATResult({'a':0, 'b': 0})
+    assert answer == False
+    answer = threeOnes.GetSATResult({'a':0, 'b': 1})
+    assert answer == False
+    answer = threeOnes.GetSATResult({'a':1, 'b': 0})
+    assert answer == False
+    answer = threeOnes.GetSATResult({'a':1, 'b': 1})
+    assert answer == False
+
 test_Not_function_works()
