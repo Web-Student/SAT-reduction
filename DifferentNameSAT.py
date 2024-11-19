@@ -11,7 +11,7 @@ def FindSat(input) :
     # define variables
     for each in input:
         for literalItem in each.split(';'):
-            if not literalItem or literalItem in variables:
+            if not literalItem:
                 continue
             
             if '-' in literalItem:
@@ -66,8 +66,6 @@ def FindSat(input) :
 
     BinaryLiterals = {}
     for solution in variables.keys():
-        if solution.startswith('-'):
-            continue
         BinaryLiterals[solution] = value(variables[solution])
     
     print(BinaryLiterals)
@@ -81,5 +79,5 @@ def FindSat(input) :
     #problem += BooleanLogic.GetSATResult
 
 
-input = ['a;b;c', '-a;b;-c', '-d;-b', '-a;c', '-b;a']
+input = ['a;b;c', '-a;b;-c', '-d;-b']
 FindSat(input)
