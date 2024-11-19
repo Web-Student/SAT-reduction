@@ -1,4 +1,4 @@
-from pulp import LpBinary, LpVariable, LpProblem, LpMaximize, value
+from pulp import PULP_CBC_CMD, LpVariable, LpProblem, LpMaximize, value
 
 from main import BooleanLogic
 
@@ -8,45 +8,54 @@ def FindSat(input) :
     variables = {}
 
     # define variables
-    for each in input.split(';'):
-        if '-' in each:
-            v = each.strip('-')
-            variables[v] = LpBinary(v)
-        else:
-            variables[each] = LpBinary(v)
+    for each in input:
+        for literalItem in each.split(';'):
+            if literalItem is None:
+                continue
+            
+            if '-' in literalItem:
+                v = literalItem.strip('-')
+                variables[v] = LpVariable(v,cat="Binary")
+            else:
+                variables[literalItem] = LpVariable(literalItem, cat="Binary")
         
-    problem = LpProblem('SAT')
+    problem = LpProblem('SAT', LpMaximize)
 
     # define or constraints (split on semicolon for OR)
     orVariables = []
     for item in input:
-        newOr = LpVariable(item)
-        separatedLiterals = item.split(';')
+        newOr = LpVariable(item.join('_or'))
+        separatedLiterals = item.split(';') #are we splitting on a semi-colon twice?
         orComponent = []
         for l in separatedLiterals:
+            if l is None:
+                continue
             if('-' in l): # each of these branches: add to 'orComponent' list for use in the last constraint
-                pass
                 # find variable[l]
-                # problem += newOr >= not variable[l]
+                orComponent.append(not variables[l.strip('-')])
+                problem += newOr >= (not variables[l.strip('-')])
             else:
-                pass
-                # problem += newOr >= variable[l]
+                orComponent.append(variables[l])
+                problem += newOr >= variables[l]
 
-        # problem += newOr <= Sum of variable in item
+        problem += newOr <= sum(orComponent)
+        orVariables.append(newOr)
 
+    print(orVariables)
 
+    sumName = ''.join(input)
+    newAND = LpVariable(sumName)
+    for orVar in orVariables:
+        problem += newAND <= orVar
+
+    problem += newAND >= sum(orVariables, -1)
+
+    status = problem.solve(PULP_CBC_CMD(msg=1))
 
     # define not constraints
     #find every variable with a dash right in front of it and add a - to it
     #to explore the possiblity of adding a not to it, let's save all of these constraints to a list for now as well
-    notConstraints = []
-    split_on_dashes = input.split('-')
-    for segment in split_on_dashes:
-        notVar = segment[0]
-        newLPProblem = (1 - variables[notVar])
-        problem += newLPProblem
-        notConstraints.append(newLPProblem)
-
+    print(status)
 
     #define constraints for everything being ored
 
@@ -56,7 +65,6 @@ def FindSat(input) :
     # define how it knows the problem is correct
     #problem += BooleanLogic.GetSATResult
 
-    result = problem.solve()
 
-input = 'a;b;-c'
+input = ['a;b;-c', "c"]
 FindSat(input)
