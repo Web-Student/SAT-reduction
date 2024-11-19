@@ -1,4 +1,4 @@
-from pulp import PULP_CBC_CMD, LpVariable, LpProblem, LpMaximize, value
+from pulp import PULP_CBC_CMD, LpVariable, LpProblem, LpMaximize, LpSolver, value
 
 from main import BooleanLogic
 
@@ -32,8 +32,8 @@ def FindSat(input) :
                 continue
             if('-' in l): # each of these branches: add to 'orComponent' list for use in the last constraint
                 # find variable[l]
-                orComponent.append(not variables[l.strip('-')])
-                problem += newOr >= (not variables[l.strip('-')])
+                orComponent.append(1- variables[l.strip('-')])
+                problem += newOr >= (1- variables[l.strip('-')])
             else:
                 orComponent.append(variables[l])
                 problem += newOr >= variables[l]
@@ -43,7 +43,7 @@ def FindSat(input) :
 
     print(orVariables)
 
-    sumName = ''.join(input)
+    sumName = '' + ''.join(input) + '_and'
     newAND = LpVariable(sumName)
     for orVar in orVariables:
         problem += newAND <= orVar
@@ -56,6 +56,14 @@ def FindSat(input) :
     #find every variable with a dash right in front of it and add a - to it
     #to explore the possiblity of adding a not to it, let's save all of these constraints to a list for now as well
     print(status)
+    # answer = LpSolver.actualSolve(problem) #google says any NaN variables, or duplicate variable names, will cause this error
+    # print(answer)
+
+    BinaryLiterals = {}
+    for solution in variables.keys():
+        BinaryLiterals[solution] = value(variables[solution])
+    
+    print(BinaryLiterals)
 
     #define constraints for everything being ored
 
@@ -66,5 +74,5 @@ def FindSat(input) :
     #problem += BooleanLogic.GetSATResult
 
 
-input = ['a;b;-c', "c"]
+input = ['a']
 FindSat(input)
