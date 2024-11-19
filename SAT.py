@@ -24,7 +24,7 @@ def FindSat(input) :
     # define or constraints (split on semicolon for OR)
     orVariables = []
     for item in input:
-        newOr = LpVariable(item.join('_or'))
+        newOr = LpVariable(item+'_or')
         separatedLiterals = item.split(';') #are we splitting on a semi-colon twice?
         orComponent = []
         for l in separatedLiterals:
@@ -32,8 +32,8 @@ def FindSat(input) :
                 continue
             if('-' in l): # each of these branches: add to 'orComponent' list for use in the last constraint
                 # find variable[l]
-                orComponent.append(1- variables[l.strip('-')])
-                problem += newOr >= (1- variables[l.strip('-')])
+                orComponent.append(not variables[l.strip('-')])
+                problem += newOr >= (not variables[l.strip('-')])
             else:
                 orComponent.append(variables[l])
                 problem += newOr >= variables[l]
