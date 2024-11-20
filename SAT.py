@@ -1,10 +1,10 @@
 from pulp import PULP_CBC_CMD, LpVariable, LpProblem, LpMaximize, LpSolver, value
 
-from main import BooleanLogic
+from Verify import Verifier
 
 def FindSat(input) :
     # define input string
-    booleanLogic = BooleanLogic(input)
+    booleanLogic = Verifier(input)
     variables = {}
     problem = LpProblem('SAT', LpMaximize)
 
@@ -71,6 +71,7 @@ def FindSat(input) :
         BinaryLiterals[solution] = value(variables[solution])
     
     print(BinaryLiterals)
+    return BinaryLiterals
 
     #define constraints for everything being ored
 

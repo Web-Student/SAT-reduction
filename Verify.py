@@ -2,11 +2,11 @@
 #useless comment
 f = ['a;b;c', '-a;b;-c', '-d;-b', '-a;c', '-b;a']
 
-class BooleanLogic():
+class Verifier():
     def __init__(self, charValues):
         self.characterValues = charValues
 
-    def GetSATResult(self, InputDictionary):
+    def Verify_sat(self, InputDictionary):
         def Or(inputs):
             separated_inputs = inputs.split(';')
 
@@ -44,55 +44,55 @@ class SATStruct():
 
 
 def test_And_Three_Ones():
-    threeOnes = BooleanLogic(['a','b','c'])
-    answer = threeOnes.GetSATResult({'a':1, 'b': 1, 'c':1})
+    threeOnes = Verifier(['a','b','c'])
+    answer = threeOnes.Verify_sat({'a':1, 'b': 1, 'c':1})
     assert answer
 
 def test_Not_function_works():
-    threeOnes = BooleanLogic(['a','-b','c'])
-    answer = threeOnes.GetSATResult({'a':1, 'b': 0, 'c':1})
+    threeOnes = Verifier(['a','-b','c'])
+    answer = threeOnes.Verify_sat({'a':1, 'b': 0, 'c':1})
     assert answer == True
 
 def test_Or_Works():
-    threeOnes = BooleanLogic(['a;b;c'])
-    answer = threeOnes.GetSATResult({'a':0, 'b': 0, 'c':0})
+    threeOnes = Verifier(['a;b;c'])
+    answer = threeOnes.Verify_sat({'a':0, 'b': 0, 'c':0})
     assert answer == False
 
 def test_Or_Works_again():
-    threeOnes = BooleanLogic(['a;b;c'])
-    answer = threeOnes.GetSATResult({'a':0, 'b': 0, 'c':1})
+    threeOnes = Verifier(['a;b;c'])
+    answer = threeOnes.Verify_sat({'a':0, 'b': 0, 'c':1})
     assert answer == True
 
 def test_Longer_function():
-    threeOnes = BooleanLogic(['a;b;c', '-a;b;-c', '-d;-b', '-a;c', '-b;a'])
-    answer = threeOnes.GetSATResult({'a':1, 'b': 1, 'c':1, 'd':0})
+    threeOnes = Verifier(['a;b;c', '-a;b;-c', '-d;-b', '-a;c', '-b;a'])
+    answer = threeOnes.Verify_sat({'a':1, 'b': 1, 'c':1, 'd':0})
     assert answer == True
 
 def test_Longer_function_is_false():
-    threeOnes = BooleanLogic(['a;b;c', '-a;b;-c', '-d;-b', '-a;c', '-b;a'])
-    answer = threeOnes.GetSATResult({'a':0, 'b': 1, 'c':1, 'd':0})
+    threeOnes = Verifier(['a;b;c', '-a;b;-c', '-d;-b', '-a;c', '-b;a'])
+    answer = threeOnes.Verify_sat({'a':0, 'b': 1, 'c':1, 'd':0})
     assert answer == False
 
 def test_two_inputs():
-    threeOnes = BooleanLogic(['a;b', '-a;-b'])
-    answer = threeOnes.GetSATResult({'a':0, 'b': 0})
+    threeOnes = Verifier(['a;b', '-a;-b'])
+    answer = threeOnes.Verify_sat({'a':0, 'b': 0})
     assert answer == False
-    answer = threeOnes.GetSATResult({'a':0, 'b': 1})
+    answer = threeOnes.Verify_sat({'a':0, 'b': 1})
     assert answer == True
-    answer = threeOnes.GetSATResult({'a':1, 'b': 0})
+    answer = threeOnes.Verify_sat({'a':1, 'b': 0})
     assert answer == True
-    answer = threeOnes.GetSATResult({'a':1, 'b': 1})
+    answer = threeOnes.Verify_sat({'a':1, 'b': 1})
     assert answer == False
     
 def test_Always_false():
-    threeOnes = BooleanLogic(['a','b', '-a','-b'])
-    answer = threeOnes.GetSATResult({'a':0, 'b': 0})
+    threeOnes = Verifier(['a','b', '-a','-b'])
+    answer = threeOnes.Verify_sat({'a':0, 'b': 0})
     assert answer == False
-    answer = threeOnes.GetSATResult({'a':0, 'b': 1})
+    answer = threeOnes.Verify_sat({'a':0, 'b': 1})
     assert answer == False
-    answer = threeOnes.GetSATResult({'a':1, 'b': 0})
+    answer = threeOnes.Verify_sat({'a':1, 'b': 0})
     assert answer == False
-    answer = threeOnes.GetSATResult({'a':1, 'b': 1})
+    answer = threeOnes.Verify_sat({'a':1, 'b': 1})
     assert answer == False
 
 test_Not_function_works()
